@@ -22,7 +22,7 @@ t_fgnum=1
 ' 获取处方头
 set rs=server.createobject("adodb.recordset")
 set rs2=server.createobject("adodb.recordset")
-rs.open "select sick_id,write_time,item_class from dispensary_prescribe_master where prescription_number='"&cfid&"'",oraconn,1,1
+rs.open "select sick_id,write_time,item_class from ***** where prescription_number='"&cfid&"'",oraconn,1,1
 if rs.recordcount=0 then
   if cfid="" then
     response.write "处方号没有正确填写。"
@@ -31,14 +31,14 @@ if rs.recordcount=0 then
   end if
 else
   if rs("item_class")<>"A" AND rs("item_class")<>"B" then
-    response.write "处方类型不正确！<BR>目前只处理门诊药房、急诊药房、儿科药房、发热药房的处方。"
+    response.write "处方类型不正确！<BR>目前只处理门诊药房、急诊药房、儿科药房的处方。"
   else
     sick_id=rs("sick_id")
     write_time=rs("write_time")
     rs.close
 
     ' 获取患者信息
-    rs.open "select name,(sysdate-birthdate)/365 as hzage,id_card_no,decode(sex,0,'男',1,'女','未知') hzsex from sick_basic_info where sick_id='"&sick_id&"'"
+    rs.open "select name,(sysdate-birthdate)/365 as hzage,id_card_no,decode(sex,0,'男',1,'女','未知') hzsex from ****** where sick_id='"&sick_id&"'"
     hzsex=rs("hzsex")
     hzname=rs("name")
     hzage=rs("hzage")
@@ -58,15 +58,15 @@ else
       hzcall="小朋友"
     end if
     rs.close
-    saymsg=saymsg&hzname&hzcall&"，您好！<br>这里是克拉玛依市中心医院药学部，药师团队为您服务！<br>"
+    saymsg=saymsg&hzname&hzcall&"，您好！<br>药师团队为您服务！<br>"
 
     ' 获取处方细表内容（测试:105242049)
     sqlstr="select a.prescription_number,a.physic_code,a.physic_name,a.physic_spec,a.doseage,a.dose_unit,a.frequency,a.day_count,d.name fuse,"
     sqlstr=sqlstr&"decode(b.form,'2',a.doseage||a.dose_unit,'72',a.doseage||a.dose_unit,'67',a.doseage||a.dose_unit,decode(a.dose_unit,b.physic_unit,"
     sqlstr=sqlstr&"a.doseage||a.dose_unit,'丸',a.doseage||a.dose_unit,'掀',a.doseage||a.dose_unit,'吸',a.doseage||a.dose_unit,'IU',a.doseage||'单位',decode(a.doseage/b.min_dose,1.5,'一'||b.physic_unit||'半',2,"
     sqlstr=sqlstr&"'两'||b.physic_unit,0.5,'半'||b.physic_unit,round(a.doseage/b.min_dose,3)||b.physic_unit))) hscjl,"
-    sqlstr=sqlstr&"a.quantity||a.physic_unit zsl,b.memo,b.min_dose,b.physic_unit,c.freq_memo from dispensary_prescribe_detail"
-    sqlstr=sqlstr&" a,physic_dict_table b,PRESCRIBE_FREQUENCY_DICT c,base_dict d where a.prescription_number='"&cfid&"'"
+    sqlstr=sqlstr&"a.quantity||a.physic_unit zsl,b.memo,b.min_dose,b.physic_unit,c.freq_memo from *****"
+    sqlstr=sqlstr&" a,***** b,***** c,****** d where a.prescription_number='"&cfid&"'"
     sqlstr=sqlstr&" and a.physic_code=b.physic_code and c.freq_describe=a.frequency and d.dict_name='TAKE_MEDICINE_WAYS_DICT' and d.code=a.usage"
 
     rs.open sqlstr,oraconn,3,2%>
@@ -213,7 +213,7 @@ response.write "<tr height=50><td>&nbsp;</td></tr><tr><td bgcolor='#AAFFFF'><fon
 response.write "<tr><td>"&sayword+"</td></tr></table>"
 
 ' 程序结束，显示版权页
-response.write "<P>&nbsp;<font style='font-size:12px'><hr align=left width='95%'>克拉玛依市中心医院 @Zxyy.PH. Y V2.1.210127<br>End...<P>"
+response.write "<P>&nbsp;<font style='font-size:12px'><hr align=left width='95%'>******医院 @Zxyy.PH. Y V2.1.210127<br>End...<P>"
 saymsg=replace(saymsg,"[x2x]","")
 'response.write "<P><B>语音测试：</B><br>"&saymsg
 
